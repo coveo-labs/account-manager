@@ -1,5 +1,5 @@
 from manager import Manager
 
-test = Manager("myorgsarecursed", "siivgxkjrw6e2jvj76vmh62jyq-myorgsarecursed")
+test = Manager("myorgsarecursed", "uuzynxmjnz35hbsjufgvkgcgqa-myorgsarecursed")
 
-print test.get_user("tests")
+print test.validate_user("test", "test")

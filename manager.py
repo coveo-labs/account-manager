@@ -33,6 +33,19 @@ class Manager:
 		else:
 			raise InvalidConfig("Failed to find secret in config file")
 
+	def generate_return_message(self, message_type, message):
+		returnMessage = {
+			'type' : message_type,
+			'message' : message
+		}
+		return returnMessage
+
+	def generate_error(self, message):
+		return self.generate_return_message('error', message)
+
+	def generate_success(self, message):
+		return self.generate_return_message('success', message)
+
 	def get_coveo_headers(self):
 		headers = {
 			"Content-Type" : "application/json",
@@ -63,10 +76,12 @@ class Manager:
 		return headers
 
 	def get_user(self, username):
-		print self.get_user_url(username)
-		print self.get_api_headers()
 		r = requests.get(self.get_user_url(username), headers=self.get_api_headers())
-		return r.text
+		profile = json.loads(r.text)['results']
+		if len(profile) > 0:
+			return profile[0]['raw']
+		else:
+			return {}
 
 	def add_user(self, username, password):
 		salt = uuid.uuid4().hex
@@ -77,3 +92,14 @@ class Manager:
 		}
 		r = requests.put(self.get_push_url("account://{}".format(username)), data=json.dumps(data), headers=self.get_push_headers())
 		return "Added user - {}".format(r.status_code)
+
+	def validate_user(self, username, password):
+		user = self.get_user(username)
+		if len(user) == 0:
+			return self.generate_error('No user found')
+		else:
+			entered_password = self.generate_hashed_password(password, user['salt'])
+			if(user['password'] == entered_password):
+				return self.generate_success('match')
+			else:
+				return self.generate_error('Wrong user/password')
