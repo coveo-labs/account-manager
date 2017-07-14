@@ -81,9 +81,9 @@ class Manager:
 		if len(profile) > 0:
 			return profile[0]['raw']
 		else:
-			return {}
+			return self.generate_error("Could not find user - {}".format(r.status_code))
 
-	def add_user(self, username, password):
+	def put_user(self, username, password):
 		salt = uuid.uuid4().hex
 		data = {
 			"username" : username,
@@ -92,6 +92,14 @@ class Manager:
 		}
 		r = requests.put(self.get_push_url("account://{}".format(username)), data=json.dumps(data), headers=self.get_push_headers())
 		return "Added user - {}".format(r.status_code)
+
+	def add_user(self, username, password):
+		user = self.get_user(username)
+		if len(user) == 0:
+			self.put_user(username, password)
+			return self.generate_success('Added user')
+		else:
+			return self.generate_error('User already exists')
 
 	def validate_user(self, username, password):
 		user = self.get_user(username)
@@ -103,3 +111,11 @@ class Manager:
 				return self.generate_success('match')
 			else:
 				return self.generate_error('Wrong user/password')
+
+	def modify_password(self, username, current_password, new_password):
+		valid_user = self.validate_user(username, current_password)
+		if valid_user['type'] == 'success':
+			self.put_user(username, new_password)
+			return self.generate_success('Changed password')
+		else:
+			return self.generate_error('Wrong password')
