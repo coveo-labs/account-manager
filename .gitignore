@@ -2,3 +2,5 @@
 .vscode
 config.yml
 *.pyc
+manager.pyc
+exmaples.py

@@ -40,6 +40,9 @@ Simple features include:
 2. `pip install requests`
 
  ## Examples
+ Import the manager
+     from manager import Manager
+
 
  ## Additional notes
  This was tested on Python 2.7.13 using platformdev
