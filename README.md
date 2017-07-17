@@ -42,7 +42,9 @@ Simple features include:
  ## Examples
  Import the manager
  
-```from manager import Manager```
+```python
+from manager import Manager
+```
 
 
  ## Additional notes
