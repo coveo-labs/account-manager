@@ -41,7 +41,8 @@ Simple features include:
 
  ## Examples
  Import the manager
-     from manager import Manager
+ 
+```from manager import Manager```
 
 
  ## Additional notes
