@@ -3,6 +3,8 @@ import yaml
 import json
 import hashlib
 import uuid
+from timeit import default_timer as timer
+from time import sleep
 
 class InvalidConfig(Exception):
     pass
@@ -14,8 +16,6 @@ class Manager:
 
 	def __init__(self, push_url="pushdev.cloud.coveo.com", api_url="platformdev.cloud.coveo.com"):
 		config = yaml.safe_load(open("config.yml"))
-
-		self.is_connected = False
 		self.push_url = push_url
 		self.api_url = api_url
 
@@ -43,6 +43,11 @@ class Manager:
 			self.source_id = config['source_id']
 		else:
 			raise InvalidConfig("Failed to find source_id in config file")
+
+		if 'push_name' in config:
+			self.push_name = config['push_name']
+		else:
+			raise InvalidConfig("Failed to find push_name in config file")
 
 	def generate_return_message(self, message_type, message):
 		returnMessage = {
@@ -77,7 +82,7 @@ class Manager:
 		return "https://{}/v1/organizations/{}/sources/{}/documents?documentId={}".format(self.push_url, self.org_id, self.source_id, doc_id)
 
 	def get_user_url(self, username):
-		return """https://{}/rest/search/?numberOfResults=1&fieldsToInclude=%5B"%40username"%2C%20"%40password"%2C"%40salt"%2C"%40uniqueid"%5D&q=%40source%3Daccounts%20%40username%3D{}&access_token={}&organizationId={}&maximumAge=0""".format(self.api_url, username, self.coveo_api_key, self.org_id)
+		return """https://{}/rest/search/?numberOfResults=1&fieldsToInclude=%5B"%40username"%2C%20"%40password"%2C"%40salt"%2C"%40uniqueid"%5D&q=%40source%3D{}%20%40username%3D{}&access_token={}&organizationId={}&maximumAge=0""".format(self.api_url, self.push_name, username, self.coveo_api_key, self.org_id)
 
 	def get_user(self, username):
 		r = requests.get(self.get_user_url(username), headers=self.get_api_headers())
@@ -124,3 +129,15 @@ class Manager:
 			return self.generate_success('Changed password')
 		else:
 			return self.generate_error('Wrong password')
+
+	def wait_until_user_created(self, username, timeout = 90):
+		start = timer()
+		while True:
+			if start - timer() > timeout:
+				return self.generate_error('Timed out')
+			else:
+				user = self.get_user(username)
+				if user['type'] != self.error:
+					return user
+				else:
+					sleep(5)
