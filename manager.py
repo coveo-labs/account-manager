@@ -118,8 +118,8 @@ class Manager:
 			"salt": salt
 		}
 		r = requests.put(
-			self.get_push_url("account://{}".format(username)), 
-			data=json.dumps(data), 
+			self.get_push_url("account://{}".format(username)),
+			data=json.dumps(data),
 			headers=self.get_push_headers())
 		return "Added user - {}".format(r.status_code)
 
