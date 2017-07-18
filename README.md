@@ -73,8 +73,8 @@ manager.wait_until_user_created(username, timeout=90)
 # All function will return a standard message format
 # which looks like this
 {
-    'type' : manager.success || manager.error # I use the "||" here as an or for the possible return types
-    'message' : 'Some message' || {'some' : 'json'}
+    'type' : manager.success or manager.error
+    'message' : 'Some message' or {'some' : 'json'}
 }
 ```
 
