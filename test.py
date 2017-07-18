@@ -2,6 +2,7 @@ from manager import Manager
 from time import sleep, time
 import unittest
 
+
 class TestStringMethods(unittest.TestCase):
 
     test_user = str(time())
