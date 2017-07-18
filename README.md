@@ -46,6 +46,37 @@ Simple features include:
 from manager import Manager
 ```
 
+Then create an instance of the class
+
+```python
+manager = Manager()
+```
+
+Once you created your instance, you can do the following things:
+
+```python
+# Add a user
+manager.add_user(username, password)
+
+# Get a user
+manager.get_user(username)
+
+# Validate a user
+manager.validate_user(username, password)
+
+# Modify a password
+manager.modify_password(username, password, new_password)
+
+# Wait until a user is created
+manager.wait_until_user_created(username, timeout=90)
+
+# All function will return a standard message format
+# which looks like this
+{
+    'type' : manager.success || manager.error # I use the "||" here as an or for the possible return types
+    'message' : 'Some message' || {'some' : 'json'}
+}
+```
 
  ## Additional notes
  This was tested on Python 2.7.13 using platformdev
