@@ -1,1 +1,9 @@
-coveo_api_key: Bearer xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+org_id: xxxxxxxxxxxxxxxx
+
+push_api_key: xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+push_name: xxxxxxxxxxxxxx
+source_id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+coveo_api_key: xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+secret: just_type_anything_here
